@@ -109,15 +109,12 @@ def Key_Stats(gather=["Total Debt/Equity",
         ticker = each_dir.split("/")[3]
         ticker_list.append(ticker)
 
-        ##        starting_stock_value = False
-        ##        starting_sp500_value = False
-
-
         if len(each_file) > 0:
             for file in each_file:
                 date_stamp = datetime.strptime(file, '%Y%m%d%H%M%S.html')
                 unix_time = time.mktime(date_stamp.timetuple())
                 full_file_path = each_dir + '/' + file
+                print(full_file_path)
                 source = open(full_file_path, 'r').read()
                 try:
                     value_list = []
@@ -134,6 +131,7 @@ def Key_Stats(gather=["Total Debt/Equity",
                             elif "M" in value:
                                 value = float(value.replace("M", '')) * 1000000
 
+                            print(value)
                             value_list.append(value)
 
 
@@ -151,7 +149,7 @@ def Key_Stats(gather=["Total Debt/Equity",
                             row = sp500_df[(sp500_df.index == sp500_date)]
                             sp500_value = float(row["Adjusted Close"])
                         except Exception as e:
-                            print("fapsdolkfhasf;lsak", str(e))
+                            print("fak", str(e))
 
                     one_year_later = int(unix_time + 31536000)
 
@@ -201,18 +199,19 @@ def Key_Stats(gather=["Total Debt/Equity",
 
                     difference = stock_p_change - sp500_p_change
 
-                    if difference > 0:
-                        status = "outperform"
+                    if difference > 5:
+                        status = 1
                     else:
-                        status = "underperform"
+                        status = 0
 
-                    if value_list.count("N/A") > 0:
+                    if value_list.count("N/A") > 15:
                         pass
                     else:
 
                         df = df.append({'Date': date_stamp,
                                         'Unix': unix_time,
                                         'Ticker': ticker,
+
                                         'Price': stock_price,
                                         'stock_p_change': stock_p_change,
                                         'SP500': sp500_value,
@@ -249,7 +248,7 @@ def Key_Stats(gather=["Total Debt/Equity",
                                         'Cash Flow': value_list[27],
                                         'Beta': value_list[28],
                                         'Held by Insiders': value_list[29],
-                                        'Held by Institutions': value_list[30],
+                                        'key_stats_acc_perf_NO_NA_enhanced.csv")Held by Institutions': value_list[30],
                                         'Shares Short (as of': value_list[31],
                                         'Short Ratio': value_list[32],
                                         'Short % of Float': value_list[33],
@@ -259,6 +258,11 @@ def Key_Stats(gather=["Total Debt/Equity",
                 except Exception as e:
                     pass
 
-    df.to_csv("key_stats_acc_perf_NO_NA.csv")
+    df.to_csv("key_stats_acc_perf_WITH_NA_enhanced.csv")
+
 
 Key_Stats()
+
+
+
+
